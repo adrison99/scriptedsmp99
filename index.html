@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScriptedSMP - Oficiální Web</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-color: #0b0712;
+      --card-bg: rgba(22, 14, 38, 0.7);
+      --card-border: rgba(139, 92, 246, 0.2);
+      --primary: #a855f7;
+      --primary-hover: #9333ea;
+      --primary-glow: rgba(168, 85, 247, 0.35);
+      --text-main: #f3e8ff;
+      --text-muted: #a78bfa;
+      --heart-active: #ef4444;
+      --heart-lost: #374151;
+      --modal-bg: #130a21;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(168, 85, 247, 0.12) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(147, 51, 234, 0.08) 0%, transparent 40%);
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- NAVBAR --- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+      background: rgba(11, 7, 18, 0.8);
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+    }
+
+    .logo {
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: -0.5px;
+      color: #fff;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo span {
+      color: var(--primary);
+      text-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-shadow: 0 0 8px var(--primary-glow);
+    }
+
+    .btn-discord {
+      background: #5865F2;
+      color: white !important;
+      padding: 0.55rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 700 !important;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 14px rgba(88, 101, 242, 0.3);
+      transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .btn-discord:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(88, 101, 242, 0.5);
+    }
+
+    /* --- MAIN LAYOUT --- */
+    main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    section {
+      margin-bottom: 5rem;
+    }
+
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 2rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 4px;
+      background: var(--primary);
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    /* --- HERO SECTION --- */
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-badge {
+      background: rgba(168, 85, 247, 0.15);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.2);
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 0%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.15rem;
+      max-width: 600px;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-primary, .btn-secondary {
+      padding: 0.8rem 1.8rem;
+      border-radius: 10px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(168, 85, 247, 0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* --- PLAYERS SECTION --- */
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .player-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+    }
+
+    .player-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25);
+    }
+
+    .player-card.rank-1 {
+      border-color: #f59e0b;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.15);
+    }
+
+    .player-rank {
+      position: absolute;
+      top: -12px;
+      background: #2e1065;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+
+    .player-card.rank-1 .player-rank {
+      background: #f59e0b;
+      color: #000;
+      border: none;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+    }
+
+    .player-avatar {
+      width: 80px;
+      height: 80px;
+      margin-top: 0.5rem;
+      margin-bottom: 0.8rem;
+      border-radius: 12px;
+      image-rendering: pixelated;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .player-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .player-kills {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #c084fc;
+      margin-bottom: 0.75rem;
+      background: rgba(168, 85, 247, 0.1);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .player-lives {
+      display: flex;
+      gap: 0.4rem;
+      background: rgba(0,0,0,0.3);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .heart {
+      font-size: 1.1rem;
+    }
+
+    .heart.active { color: var(--heart-active); filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6)); }
+    .heart.lost { color: var(--heart-lost); opacity: 0.4; }
+
+    .card-hint {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+      transition: opacity 0.2s ease;
+    }
+
+    .player-card:hover .card-hint {
+      opacity: 1;
+    }
+
+    /* --- VIDEOS & TIMELINE SECTION --- */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      position: relative;
+    }
+
+    .timeline-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 1.5rem;
+      backdrop-filter: blur(8px);
+    }
+
+    .video-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .video-date {
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .video-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .video-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* --- MODAL (POPUP) --- */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(5, 2, 10, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--modal-bg);
+      border: 1px solid var(--primary);
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 0 40px var(--primary-glow);
+      transform: translateY(20px);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem;
+      right: 1.2rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: var(--primary);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 1.2rem;
+    }
+
+    .modal-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      image-rendering: pixelated;
+      border: 2px solid var(--primary);
+    }
+
+    .modal-player-info h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .deaths-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .death-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .death-item {
+      background: rgba(255, 255, 255, 0.03);
+      border-left: 3px solid #ef4444;
+      padding: 0.8rem 1rem;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .death-episode {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #ef4444;
+      margin-bottom: 0.2rem;
+    }
+
+    .death-reason {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    .player-link {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 700;
+      transition: color 0.2s ease;
+    }
+
+    .player-link:hover {
+      color: #c084fc;
+    }
+
+    .no-deaths {
+      color: #10b981;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      background: var(--card-bg);
+      border: 1px dashed var(--card-border);
+      border-radius: 16px;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      background: rgba(11, 7, 18, 0.9);
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2.5rem; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .nav-links { gap: 1rem; }
+      .nav-links a { font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">Scripted<span>SMP</span></div>
+      <ul class="nav-links">
+        <li><a href="#uvod">Úvod</a></li>
+        <li><a href="#hraci">Hráči</a></li>
+        <li><a href="#videa">Videa</a></li>
+        <li>
+          <a href="https://discord.gg/DFyxTm33nh" target="_blank" class="btn-discord">
+            <svg width="18" height="18" viewBox="0 0 127.14 96.36" fill="currentColor"><path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0,-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a74.56,74.56,0,0,0,64.3,0c.87.68,1.76,1.36,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.14c2.64-27.38-4.51-51.11-18.88-72.13ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,45.91,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5-12.74,11.44-12.74S96.23,45.91,96.12,53,91.08,65.69,84.69,65.69Z"/></svg>
+            Discord
+          </a>
+        </li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section id="uvod" class="hero">
+      <div class="hero-badge">Minecraft Příběhový Server</div>
+      <h1>Vítejte na ScriptedSMP</h1>
+      <p>Sledujte osudy, spojenectví, zrady a příběhy tvých oblíbených hráčů v unikátním Minecraft příběhovém světě. Každý má pouze 3 životy.</p>
+      <div class="hero-buttons">
+        <a href="#hraci" class="btn-primary">Zobrazit Hráče</a>
+        <a href="#videa" class="btn-secondary">Sledovat Videa</a>
+      </div>
+    </section>
+
+    <!-- PLAYERS SECTION -->
+    <section id="hraci">
+      <h2 class="section-title">Hráči na Serveru</h2>
+      <div class="players-grid" id="playersContainer">
+        <!-- Zde se přes JS automaticky vloží karty hráčů -->
+      </div>
+    </section>
+
+    <!-- VIDEOS SECTION -->
+    <section id="videa">
+      <h2 class="section-title">Videa & Timeline</h2>
+      <div class="timeline" id="videosContainer">
+        <!-- Zde se přes JS automaticky vloží videa -->
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL / DETAIL HRÁČE -->
+  <div class="modal-overlay" id="playerModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-header">
+        <img src="" id="modalAvatar" class="modal-avatar" alt="Head">
+        <div class="modal-player-info">
+          <h3 id="modalName">Name</h3>
+          <div class="player-kills" id="modalKills" style="margin-top:0.4rem; display:inline-flex;">⚔️ 0 killů</div>
+          <div class="player-lives" id="modalLives" style="margin-top:0.4rem;"></div>
+        </div>
+      </div>
+      <div class="deaths-title">Historie Úmrtí</div>
+      <div class="death-list" id="modalDeaths">
+        <!-- Zde se přes JS vloží seznam úmrtí -->
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 ScriptedSMP. Všechna práva vyhrazena.</p>
+  </footer>
+
+  <!-- DATA & LOGIKA WEBU -->
+  <script>
+    /* 
+    ========================================================
+      1. NASTAVENÍ HRÁČŮ
+    ========================================================
+    */
+    const playersData = [
+      {
+        ign: "Adrison99",
+        lives: 3,
+        kills: 0,
+        rank: 1,
+        deathHistory: []
+      }
+    ];
+
+    /* 
+    ========================================================
+      2. NASTAVENÍ VIDEÍ
+    ========================================================
+    */
+    const videosData = [
+      {
+        title: "Jak jsme neuspěli v získání nejmocnější zbraně v minecraftu",
+        youtubeId: "5KZR4kxBJ7M",
+        date: "14. Listopad 2024",
+        description: "Pokus o získání nejmocnější zbraně v Minecraftu nedopadl podle plánu."
+      }
+    ];
+
+    /* 
+    ========================================================
+      3. LOGIKA WEBU
+    ========================================================
+    */
+    
+    // Renderování Hráčů
+    function renderPlayers() {
+      const container = document.getElementById('playersContainer');
+      if (playersData.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;">Zatím nebyli přidáni žádní hráči.</div>`;
+        return;
+      }
+
+      container.innerHTML = playersData.map((player, index) => {
+        let heartsHtml = '';
+        for (let i = 1; i <= 3; i++) {
+          heartsHtml += i <= player.lives ? '<span class="heart active">❤️</span>' : '<span class="heart lost">🖤</span>';
+        }
+
+        const isRank1 = player.rank === 1 ? 'rank-1' : '';
+
+        return `
+          <div class="player-card ${isRank1}" onclick="openModalByIgn('${player.ign}')">
+            <div class="player-rank">${player.rank || (index + 1)}</div>
+            <img class="player-avatar" src="https://mc-heads.net/avatar/${player.ign}/100" alt="${player.ign}">
+            <div class="player-name">${player.ign}</div>
+            <div class="player-kills">⚔️ ${player.kills || 0} killů</div>
+            <div class="player-lives">
+              ${heartsHtml}
+            </div>
+            <div class="card-hint">Klikni pro detail úmrtí 🔍</div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Renderování Videí
+    function renderVideos() {
+      const container = document.getElementById('videosContainer');
+      if (videosData.length === 0) {
+        container.innerHTML = `<div class="empty-state">Zatím nebyly přidány žádné epizody ani videa.</div>`;
+        return;
+      }
+
+      container.innerHTML = videosData.map(video => `
+        <div class="timeline-item">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/${video.youtubeId}" allowfullscreen></iframe>
+          </div>
+          <div class="video-info">
+            <div class="video-date">${video.date}</div>
+            <div class="video-title">${video.title}</div>
+            <div class="video-desc">${video.description}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Otevření detailu hráče podle IGN
+    function openModalByIgn(ign) {
+      const player = playersData.find(p => p.ign.toLowerCase() === ign.toLowerCase());
+      if (!player) return;
+
+      const modal = document.getElementById('playerModal');
+      
+      document.getElementById('modalAvatar').src = `https://mc-heads.net/avatar/${player.ign}/100`;
+      document.getElementById('modalName').innerText = player.ign;
+      document.getElementById('modalKills').innerText = `⚔️ ${player.kills || 0} killů`;
+
+      // Srdíčka
+      let heartsHtml = '';
+      for (let i = 1; i <= 3; i++) {
+        heartsHtml += i <= player.lives ? '<span class="heart active">❤️</span>' : '<span class="heart lost">🖤</span>';
+      }
+      document.getElementById('modalLives').innerHTML = heartsHtml;
+
+      // Historie úmrtí
+      const deathsContainer = document.getElementById('modalDeaths');
+      if (!player.deathHistory || player.deathHistory.length === 0) {
+        deathsContainer.innerHTML = `<div class="no-deaths">✨ Tento hráč zatím nepřišel o žádný život!</div>`;
+      } else {
+        deathsContainer.innerHTML = player.deathHistory.map(death => {
+          let reasonText = '';
+          
+          if (death.killedBy) {
+            reasonText = `<b>${player.ign}</b> was slain by <span class="player-link" onclick="openModalByIgn('${death.killedBy}')">${death.killedBy}</span>`;
+            if (death.reason) reasonText += ` (${death.reason})`;
+          } else {
+            reasonText = death.reason || 'Zemřel neznámou smrtí';
+          }
+
+          return `
+            <div class="death-item">
+              <div class="death-episode">${death.episode}</div>
+              <div class="death-reason">${reasonText}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      modal.classList.add('active');
+    }
+
+    // Zavření Modalu
+    function closeModal() {
+      document.getElementById('playerModal').classList.remove('active');
+    }
+
+    // Zavření modalu klávesou ESC nebo kliknutím mimo okno
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    document.getElementById('playerModal').addEventListener('click', (e) => {
+      if (e.target.id === 'playerModal') closeModal();
+    });
+
+    // Spuštění renderování při načtení webu
+    renderPlayers();
+    renderVideos();
+  </script>
+</body>
+</html>
